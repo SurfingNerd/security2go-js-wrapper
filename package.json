@@ -1,0 +1,25 @@
+{
+  "name": "security2go-js-wrapper",
+  "version": "0.0.1",
+  "description": "javascript wrapper for the Security2Go card by infineon for the usage on a Node JS Server.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SurfingNerd/security2go-js-wrapper.git"
+  },
+  "keywords": [
+    "Security2Go",
+    "Infineon",
+    "web3",
+    "blockchain"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SurfingNerd/security2go-js-wrapper/issues"
+  },
+  "homepage": "https://github.com/SurfingNerd/security2go-js-wrapper#readme"
+}
