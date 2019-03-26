@@ -74,13 +74,23 @@ async function sign(web3, rawTx) {
 
 const web3 = new Web3('ws://ws.tau1.artis.network');
 
-const rawTx = {
+const rawTxOpen = {
   nonce: '0x00',
   gasPrice: 1000000000,
-  gasLimit: '0x5498',
-  to: '0x30B125d5Fc58c1b8E3cCB2F1C71a1Cc847f024eE',
+  gasLimit: '0x493E0',
+  to: '0xF6eF10E21166cf2e33DB070AFfe262F90365e8D4',
   value: 0,
-  data: '0x0'
+  data: '0x0905186e00000000000000000000000001019e15b7beef611ac4659e7acdc272c4d90afa00000000000000000000000000000000000000000000000000000a86cc92e3da'
 };
 
-sign(web3, rawTx);
+const rawTxClose = {
+  nonce: '0x00',
+  gasPrice: 1000000000,
+  gasLimit: '0x493E0',
+  to: '0xF6eF10E21166cf2e33DB070AFfe262F90365e8D4',
+  value: 0,
+  data: '0x9abe837900000000000000000000000001019e15b7beef611ac4659e7acdc272c4d90afa'
+};
+
+sign(web3, rawTxOpen);
+//sign(web3, rawTxClose);
