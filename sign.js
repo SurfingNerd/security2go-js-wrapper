@@ -18,15 +18,13 @@ async function sign(web3, rawTx) {
   console.log(publickey);
 
   // todo: get address from publickey
-  console.log(publickey);
-  const address = Util.publicToAddress(address); // <--
-
-  return;
+  let address = '0x' + web3.utils.sha3('0x' + publickey).slice(26);
+  console.log('address');
+  console.log(address);
 
   rawTx.nonce = await web3.eth.getTransactionCount(address);
   // todo: is the nonce in 0x hex format?
   console.log(rawTx.nonce);
-  return;
 
   const tx = new Tx(rawTx);
   //tx.sign(privateKey);
@@ -78,11 +76,11 @@ const web3 = new Web3('ws://ws.tau1.artis.network');
 
 const rawTx = {
   nonce: '0x00',
-  gasPrice: '0x3B9ACA00',
+  gasPrice: 1000000000,
   gasLimit: '0x5498',
-  to: '0x0000000000000000000000000000000000000000',
-  value: '0x00',
-  data: '0xc0de'
+  to: '0x30B125d5Fc58c1b8E3cCB2F1C71a1Cc847f024eE',
+  value: 0,
+  data: '0x0'
 };
 
 sign(web3, rawTx);

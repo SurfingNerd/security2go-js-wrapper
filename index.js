@@ -8,9 +8,9 @@ class security2goWrapper {
 
     async getPublicKey(keySlot) {
         const { stdout, stderr } = await exec('blocksec2go get_key_info ' + keySlot);
-        
+
         let line = stdout.split('\n')[2];
-        let publickey = line.split(':')[1].trim();
+        let publickey = line.split(':')[1].trim().slice(2);
 
         return publickey;
     }
@@ -20,7 +20,7 @@ class security2goWrapper {
 
         let line =  stdout.split('\n')[2];
         let signature = line.split(':')[1].trim();
-        
+
         return signature;
 
     }
