@@ -11,7 +11,7 @@ function toHex(nonHex, prefix = true) {
   return temp;
 }
 
-async function sign(web3, rawTx) {
+async function sign(web3, rawTx, noncePlus = 0) {
   const wrapper = new s2go.security2goWrapper();
   const publickey = await wrapper.getPublicKey(1);
   console.log('publickey');
@@ -23,6 +23,7 @@ async function sign(web3, rawTx) {
   console.log(address);
 
   rawTx.nonce = await web3.eth.getTransactionCount(address);
+  rawTx.nonce += noncePlus;
   // todo: is the nonce in 0x hex format?
   console.log(rawTx.nonce);
 
@@ -66,10 +67,7 @@ async function sign(web3, rawTx) {
   console.log('serializedTx');
   console.log(toHex(serializedTx));
 
-
-  web3.eth.sendSignedTransaction(toHex(serializedTx))
-    .on('receipt', console.log);
-
+  return toHex(serializedTx);
 }
 
 const web3 = new Web3('ws://ws.tau1.artis.network');
@@ -92,5 +90,28 @@ const rawTxClose = {
   data: '0x9abe837900000000000000000000000001019e15b7beef611ac4659e7acdc272c4d90afa'
 };
 
-sign(web3, rawTxOpen);
-//sign(web3, rawTxClose);
+let txOpen = null;
+let txClose = null;
+
+async function putCard() {
+  console.log('putCard');
+  // create both transactions
+  txOpen = await sign(web3, rawTxOpen);
+  txClose = await sign(web3, rawTxClose, 1);
+
+  // send open
+  await web3.eth.sendSignedTransaction(txOpen).on('receipt', console.log);
+}
+
+async function takeCard() {
+  console.log('takeCard');
+  // send close
+  await web3.eth.sendSignedTransaction(txClose).on('receipt', console.log);
+}
+
+async function start() {
+  await putCard();
+  await takeCard();
+}
+
+start();
