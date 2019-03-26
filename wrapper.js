@@ -7,7 +7,7 @@ class security2goWrapper {
     //must have for now...
 
     async getPublicKey(keySlot) {
-        const { stdout, stderr } = await exec('/usr/bin/python3 /home/sn/github/BlockchainSecurity2Go-Python-Library/blocksec2go get_key_info ' + keySlot);
+        const { stdout, stderr } = await exec('blocksec2go get_key_info ' + keySlot);
 
         try {
             let line = stdout.split('\n')[2];
@@ -24,7 +24,7 @@ class security2goWrapper {
     async generateSignature(keySlot, messageToSign ) {
 
         try {
-            const { stdout, stderr } = await exec('/usr/bin/python3 /home/sn/github/BlockchainSecurity2Go-Python-Library/blocksec2go generate_signature ' + keySlot + ' ' + messageToSign);
+            const { stdout, stderr } = await exec('blocksec2go generate_signature ' + keySlot + ' ' + messageToSign);
 
             let line =  stdout.split('\n')[2];
             let signature = line.split(':')[1].trim();
