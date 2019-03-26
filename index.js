@@ -21,6 +21,7 @@ const NO_CARD = 18;
 const YES_CARD = 65584;
 
 //const SCARD_STATE_EMPTY = ;
+var lastStateWasCard = false;
 
 pcsc.on('reader', function(reader) {
 
@@ -37,8 +38,9 @@ pcsc.on('reader', function(reader) {
         if (changes) {
             console.log('changes detected');
             console.log(changes);
-            if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
-           
+            if (lastStateWasCard && (changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
+
+                lastStateWasCard = false;
                 console.log("card removed");/* card removed */
                 reader.disconnect(reader.SCARD_LEAVE_CARD, function(err) {
                     if (err) {
@@ -48,8 +50,9 @@ pcsc.on('reader', function(reader) {
                     }
                     sign.takeCard();
                 });
-            } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
+            } else if (!lastStateWasCard && (changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
             
+                lastStateWasCard = true;
                 console.log('putting card');
                 sign.putCard() ;
 

@@ -18,14 +18,14 @@ const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitT
 async function sign(web3, rawTx, secondTx) {
   const wrapper = new s2go.security2goWrapper();
   const publickey = await wrapper.getPublicKey(1);
-  console.log('publickey');
-  console.log(publickey);
+  logSigning('publickey');
+  logSigning(publickey);
 
 
   // todo: get address from publickey
   let address = '0x' + web3.utils.sha3('0x' + publickey).slice(26);
-  console.log('address');
-  console.log(address);
+  logSigning('address');
+  logSigning(address);
 
   if (!secondTx) {
     rawTx.nonce = await web3.eth.getTransactionCount(address);
@@ -33,55 +33,55 @@ async function sign(web3, rawTx, secondTx) {
     rawTx.nonce = (await web3.eth.getTransactionCount(address)) + 1;
   }
   // todo: is the nonce in 0x hex format?
-  console.log('rawTx.nonce');
-  console.log(rawTx.nonce);
+  logSigning('rawTx.nonce');
+  logSigning(rawTx.nonce);
 
   const tx = new Tx(rawTx);
   //tx.sign(privateKey);
 
   const hash = toHex(tx.hash(false), false);
-  console.log('hash');
-  console.log(hash);
+  logSigning('hash');
+  logSigning(hash);
 
 
   let serializedTx = '';
   let i = 0;
   do {
-    console.log('tries to generate signature.');
+    logSigning('tries to generate signature.');
 
     const cardSig = await wrapper.generateSignature(1, hash.toString('hex'));
-    console.log('cardSig');
-    console.log(cardSig);
+    logSigning('cardSig');
+    logSigning(cardSig);
 
     let rStart = 6;
     let length = 2;
     const rLength = parseInt(cardSig.slice(rStart, rStart + length), 16);
-    console.log('rLength');
-    console.log(rLength);
+    logSigning('rLength');
+    logSigning(rLength);
     rStart += 2;
     const r = cardSig.slice(rStart, rStart + rLength * 2);
-    console.log('r');
-    console.log(r);
+    logSigning('r');
+    logSigning(r);
 
     let sStart = rStart + rLength * 2 + 2;
     const sLength = parseInt(cardSig.slice(sStart, sStart + length), 16);
-    console.log('sLength');
-    console.log(sLength);
+    logSigning('sLength');
+    logSigning(sLength);
     sStart += 2;
     const s = cardSig.slice(sStart, sStart + sLength * 2);
-    console.log('s');
-    console.log(s);
+    logSigning('s');
+    logSigning(s);
 
     rawTx.r = '0x' + r;
     rawTx.s = '0x' + s;
 
     const tx2 = new Tx(rawTx);
-    //console.log(tx2);
+    //logSigning(tx2);
 
     serializedTx = tx2.serialize();
-    console.log('serializedTx');
-    console.log(toHex(serializedTx));
-    console.log(web3.eth.accounts.recoverTransaction(toHex(serializedTx)));
+    logSigning('serializedTx');
+    logSigning(toHex(serializedTx));
+    logSigning(web3.eth.accounts.recoverTransaction(toHex(serializedTx)));
 
     i += 1;
   } while (web3.eth.accounts.recoverTransaction(toHex(serializedTx)).toLocaleLowerCase() !== address);
@@ -113,6 +113,7 @@ const rawTxClose = {
 
 let txOpen = null;
 let txClose = null;
+let log_debug_signing = false;
 
 async function putCard() {
   console.log('putCard');
@@ -131,6 +132,12 @@ async function takeCard() {
     console.log('takeCard');
   // send close
   await web3.eth.sendSignedTransaction(txClose).on('receipt', console.log);
+  }
+}
+
+function logSigning(message) {
+  if (log_debug_signing) {
+    console.log(message)
   }
 }
 
