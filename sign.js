@@ -1,7 +1,9 @@
 const Tx = require('ethereumjs-tx');
 const Util = require('ethereumjs-util');
 const Web3 = require('web3');
-const s2go = require('./index');
+const s2go = require('./wrapper');
+
+
 
 function toHex(nonHex, prefix = true) {
   let temp = nonHex.toString('hex');
@@ -17,15 +19,27 @@ async function sign(web3, rawTx, noncePlus = 0) {
   console.log('publickey');
   console.log(publickey);
 
+
   // todo: get address from publickey
   let address = '0x' + web3.utils.sha3('0x' + publickey).slice(26);
   console.log('address');
   console.log(address);
 
-  rawTx.nonce = await web3.eth.getTransactionCount(address);
-  rawTx.nonce += noncePlus;
+  //DIRTY
+  //rawTx.chainId = 246785;
+
+  //rawTx.from = address;
+
+  let balance = await web3.eth.getBalance(address);
+  console.log('Balance: ' + balance);
+
+  //rawTx.nonce = 7;
+
+  //rawTx.nonce = await web3.eth.getTransactionCount(address);
+  //rawTx.nonce += noncePlus;
   // todo: is the nonce in 0x hex format?
-  console.log(rawTx.nonce);
+  //rawTx.nonce = web3.utils.toHex(rawTx.nonce);
+  //console.log('Nonce: ' + rawTx.nonce);
 
   const tx = new Tx(rawTx);
   //tx.sign(privateKey);
@@ -73,7 +87,7 @@ async function sign(web3, rawTx, noncePlus = 0) {
 const web3 = new Web3('ws://ws.tau1.artis.network');
 
 const rawTxOpen = {
-  nonce: '0x00',
+ // nonce: '0x00',
   gasPrice: 1000000000,
   gasLimit: '0x493E0',
   to: '0xF6eF10E21166cf2e33DB070AFfe262F90365e8D4',
@@ -82,7 +96,7 @@ const rawTxOpen = {
 };
 
 const rawTxClose = {
-  nonce: '0x00',
+ // nonce: '0x00',
   gasPrice: 1000000000,
   gasLimit: '0x493E0',
   to: '0xF6eF10E21166cf2e33DB070AFfe262F90365e8D4',
@@ -97,16 +111,20 @@ async function putCard() {
   console.log('putCard');
   // create both transactions
   txOpen = await sign(web3, rawTxOpen);
-  txClose = await sign(web3, rawTxClose, 1);
+  //txClose = await sign(web3, rawTxClose, 1);
 
+  //console.log(txClose);
   // send open
   await web3.eth.sendSignedTransaction(txOpen).on('receipt', console.log);
 }
 
 async function takeCard() {
-  console.log('takeCard');
+
+  if (txClose != null) {
+    console.log('takeCard');
   // send close
   await web3.eth.sendSignedTransaction(txClose).on('receipt', console.log);
+  }
 }
 
 async function start() {
@@ -114,4 +132,10 @@ async function start() {
   await takeCard();
 }
 
-start();
+//start();
+
+
+module.exports = {
+  takeCard,
+  putCard
+}
