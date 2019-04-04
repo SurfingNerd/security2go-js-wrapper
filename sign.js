@@ -3,7 +3,7 @@ const Util = require('ethereumjs-util');
 const Web3 = require('web3');
 const s2go = require('./wrapper');
 
-
+let log_debug_signing = true;
 
 function toHex(nonHex, prefix = true) {
   let temp = nonHex.toString('hex');
@@ -101,13 +101,6 @@ const rawTxOpen = {
   data: '0x0905186e00000000000000000000000001019e15b7beef611ac4659e7acdc272c4d90afa00000000000000000000000000000000000000000000000000000a86cc92e3da'
 };
 
-try {
-  var estimatedGasOpen = await web3.eth.estimateGas(rawTxOpen);
-  console.log('estimated gasLimit for opening transaction:' + estimatedGasOpen);
-  rawTxOpen.gasLimit = estimatedGasOpen;
-} catch(err) {
-  console.log('error while estimating gas costs (open transaction):' + err);
-}
 
 const rawTxClose = {
  // nonce: '0x00',
@@ -118,24 +111,36 @@ const rawTxClose = {
   data: '0x9abe837900000000000000000000000001019e15b7beef611ac4659e7acdc272c4d90afa'
 };
 
-try {
-  var estimatedGasClose = await web3.eth.estimateGas(rawTxClose);
-  console.log('estimated gasLimit for closing transaction:' + estimatedGasClose);
-  rawTxClose.gasLimit = estimatedGasClose;
-} catch(err) {
-  console.log('error while estimating gas costs (open transaction):' + err);
-}
 
 
 
 
 let txOpen = null;
 let txClose = null;
-let log_debug_signing = false;
+
 
 async function putCard() {
-  console.log('putCard');
+  logSigning('putCard');
   // create both transactions
+
+  try {
+    var estimatedGasClose = await web3.eth.estimateGas(rawTxClose);
+    logSigning('estimated gasLimit for closing transaction:' + estimatedGasClose);
+    rawTxClose.gasLimit = estimatedGasClose;
+  } catch(err) {
+    logSigning('error while estimating gas costs (open transaction):' + err);
+  }
+
+  try {
+    var estimatedGasOpen = await web3.eth.estimateGas(rawTxOpen);
+    logSigning('estimated gasLimit for opening transaction:' + estimatedGasOpen);
+    rawTxOpen.gasLimit = estimatedGasOpen;
+  } catch(err) {
+    logSigning('error while estimating gas costs (open transaction):' + err);
+  }
+  
+
+
   txOpen = await sign(web3, rawTxOpen);
   txClose = await sign(web3, rawTxClose, true);
 
