@@ -13,7 +13,6 @@ function toHex(nonHex, prefix = true) {
   return temp;
 }
 
-const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
 
 async function sign(web3, rawTx, secondTx) {
   const wrapper = new s2go.security2goWrapper();
@@ -98,9 +97,18 @@ const rawTxOpen = {
   gasPrice: 1000000000,
   gasLimit: '0x50000',
   to: '0xE53BA69C94b657838B2b22B9BC609163cC34512f',
+
   value: 0,
   data: '0x0905186e00000000000000000000000001019e15b7beef611ac4659e7acdc272c4d90afa00000000000000000000000000000000000000000000000000000a86cc92e3da'
 };
+
+try {
+  var estimatedGasOpen = web3.eth.estimateGas(rawTxOpen);
+  console.log('estimated gasLimit for opening transaction:' + estimatedGasOpen);
+  rawTxOpen.gasLimit = estimatedGasOpen;
+} catch(err) {
+  console.log('error while estimating gas costs (open transaction):' + err);
+}
 
 const rawTxClose = {
  // nonce: '0x00',
@@ -110,6 +118,15 @@ const rawTxClose = {
   value: 0,
   data: '0x9abe837900000000000000000000000001019e15b7beef611ac4659e7acdc272c4d90afa'
 };
+
+try {
+  var estimatedGasClose = web3.eth.estimateGas(rawTxClose);
+  console.log('estimated gasLimit for closing transaction:' + estimatedGasClose);
+  rawTxClose.gasLimit = estimatedGasClose;
+} catch(err) {
+  console.log('error while estimating gas costs (open transaction):' + err);
+}
+
 
 let txOpen = null;
 let txClose = null;
