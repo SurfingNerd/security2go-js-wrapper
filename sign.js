@@ -146,16 +146,31 @@ async function putCard() {
 
   //console.log(txClose);
   // send open
-  await web3.eth.sendSignedTransaction(txOpen).on('receipt', console.log);
+  sendSignedTransaction(txOpen);
 }
 
-async function takeCard() {
+function takeCard() {
 
   if (txClose != null) {
     console.log('takeCard');
   // send close
-  await web3.eth.sendSignedTransaction(txClose).on('receipt', console.log);
+  sendSignedTransaction(txClose);
   }
+}
+
+async function sendSignedTransaction(tx) {
+
+  try {
+    const receipt = await web3.eth.sendSignedTransaction(tx);
+    console.log(`transaction receipted, hash: ${receipt.transactionHash}`);
+    
+  } catch (error) {
+    console.log('caught exception: ' + error);
+  }
+  
+  
+  
+  //todo: handle errors, and pseudo errors in a better way.
 }
 
 function logSigning(message) {
