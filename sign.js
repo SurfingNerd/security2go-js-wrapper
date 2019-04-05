@@ -121,23 +121,23 @@ async function putCard() {
   logSigning('putCard');
   // create both transactions
 
-  try {
-    var estimatedGasClose = await web3.eth.estimateGas(rawTxClose);
-    logSigning('estimated gasLimit for closing transaction:' + estimatedGasClose);
-    rawTxClose.gasLimit = estimatedGasClose;
-  } catch(err) {
-    logSigning('error while estimating gas costs (open transaction):' + err);
-    rawTxClose.gasLimit = '0x60000';
-  }
+  // try {
+  //   var estimatedGasClose = await web3.eth.estimateGas(rawTxClose);
+  //   logSigning('estimated gasLimit for closing transaction:' + estimatedGasClose);
+  //   rawTxClose.gasLimit = estimatedGasClose;
+  // } catch(err) {
+  //   logSigning('error while estimating gas costs (open transaction):' + err);
+  //   rawTxClose.gasLimit = '0x60000';
+  // }
 
-  try {
-    var estimatedGasOpen = await web3.eth.estimateGas(rawTxOpen);
-    logSigning('estimated gasLimit for opening transaction:' + estimatedGasOpen);
-    rawTxOpen.gasLimit = estimatedGasOpen;
-  } catch(err) {
-    logSigning('error while estimating gas costs (open transaction):' + err);
-    rawTxOpen.gasLimit = '0x60000';
-  }
+  // try {
+  //   var estimatedGasOpen = await web3.eth.estimateGas(rawTxOpen);
+  //   logSigning('estimated gasLimit for opening transaction:' + estimatedGasOpen);
+  //   rawTxOpen.gasLimit = estimatedGasOpen;
+  // } catch(err) {
+  //   logSigning('error while estimating gas costs (open transaction):' + err);
+  //   rawTxOpen.gasLimit = '0x60000';
+  // }
   
 
 
