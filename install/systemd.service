@@ -1,0 +1,18 @@
+[Unit]
+Description=Ka Goed Ka Musi - NFC Service
+Requires=pcscd.service
+Requires=network.target
+After=pcscd.service
+After=multi-user.target
+
+[Service]
+User=pi
+ExecStart=/usr/local/bin/node /home/pi/security2go-js-wrapper/index.js
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=kgkm-nfc
+
+[Install]
+WantedBy=multi-user.target
