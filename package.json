@@ -4,6 +4,7 @@
   "description": "javascript wrapper for the Security2Go card by infineon for the usage on a Node JS Server.",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
