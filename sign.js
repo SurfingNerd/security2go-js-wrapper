@@ -21,7 +21,7 @@ async function sign(web3, rawTx, secondTx) {
   logSigning(publickey);
 
 
-  // todo: get address from publickey
+  // get address from publickey
   let address = '0x' + web3.utils.sha3('0x' + publickey).slice(26);
   logSigning('address');
   logSigning(address);
